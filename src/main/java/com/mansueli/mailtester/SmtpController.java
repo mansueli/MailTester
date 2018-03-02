@@ -170,6 +170,7 @@ public class SmtpController implements Initializable {
     @FXML
     private void handleSendAction(ActionEvent event) {
         ResultsController.resetLog();
+        sendButton.setDisable(true);
         if (plainButton.isSelected()) {
             sendPlainMail();
         } else if (emlButton.isSelected()) {
@@ -179,6 +180,7 @@ public class SmtpController implements Initializable {
         } else if (htmlButton.isSelected()) {
             sendHTMLMail();
         }
+        sendButton.setDisable(false);
     }
 
     private void sendPlainMail() {
@@ -324,11 +326,11 @@ public class SmtpController implements Initializable {
                 showOKDialog();
             } catch (Exception e) {
                 logger.error("not sent " + e.toString());
-                showErrorDialog(e.getMessage(), e.toString());
+                showErrorDialog(e.getLocalizedMessage(), e.toString());
             }
         } catch (Exception e) {
             logger.error("Couldn't send message");
-            showErrorDialog(e.getMessage(), e.toString());
+            showErrorDialog(e.getLocalizedMessage(), e.toString());
         }
     }
 

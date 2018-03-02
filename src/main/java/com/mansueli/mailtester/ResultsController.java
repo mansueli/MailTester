@@ -63,10 +63,13 @@ public class ResultsController implements Initializable {
     private static String styledLog(String log) {
         String style = "";
         // IMAP & SMTP codes
-        if (Character.isDigit(log.charAt(0))) {
+        if (Character.isDigit(log.charAt(0))||log.charAt(0)=='*') {
             style += "font-family: 'Courier'; color: #0059B2;"; //"-fx-fill: #0059B2;";
         }
-        else if (log.toLowerCase().indexOf("deb") != -1||log.toLowerCase().indexOf("info") != -1){
+        else if (log.toLowerCase().indexOf("info")!= -1){
+             style += "font-family: 'Courier'; color: #AAAAAA;"; //"-fx-fill: #B28500;";   
+        }
+        else if (log.toLowerCase().indexOf("deb") != -1){
             style += "font-family: 'Courier'; color: #B28500;"; //"-fx-fill: #B28500;";        
         }
         else if ((log.toLowerCase().indexOf("excep") != -1)||(log.toLowerCase().indexOf("err") != -1)) {

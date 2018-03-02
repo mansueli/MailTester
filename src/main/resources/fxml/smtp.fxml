@@ -33,7 +33,7 @@
                 <ToggleButton toggleGroup="$smtpToggleGroup" fx:id="attachButton" layoutX="248.0" layoutY="60.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" maxWidth="128.0" maxHeight="128.0" prefHeight="128.0" prefWidth="108.0" text="" />
                 <ToggleButton toggleGroup="$smtpToggleGroup" fx:id="htmlButton" layoutX="428.0" layoutY="60.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" maxWidth="128.0" maxHeight="128.0" prefHeight="128.0" prefWidth="108.0" text="" />
                 <ToggleButton toggleGroup="$smtpToggleGroup" fx:id="plainButton" layoutX="616.0" layoutY="60.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" maxWidth="128.0" maxHeight="128.0" prefHeight="128.0" prefWidth="108.0" text="" />
-            </children>
+			</children>
         </AnchorPane>
         <AnchorPane prefHeight="58.0" prefWidth="800.0">
             <children>
@@ -45,6 +45,11 @@
                     </font>
                 </Label>
             </children>
-        </AnchorPane>
+        </AnchorPane>   
+		<AnchorPane>
+			<children>
+			<Label layoutX="440.0" layoutY="0.0" text="Wait a few seconds after clicking to send" />
+			</children>
+		</AnchorPane>
     </children>
 </VBox>

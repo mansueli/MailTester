@@ -48,14 +48,14 @@ public class AccountController implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         currentAcc = MainController.currentAccount;
+        nameField.textProperty().bindBidirectional(currentAcc.getName());
         emailField.textProperty().bindBidirectional(currentAcc.getEmail());
         passwordField.textProperty().bindBidirectional(currentAcc.getPassword());
         imapServerField.textProperty().bindBidirectional(currentAcc.getImapserver());
         smtpServerField.textProperty().bindBidirectional(currentAcc.getSmtpserver());
         imapPortField.textProperty().bindBidirectional(currentAcc.getImapport());
         smtpPortField.textProperty().bindBidirectional(currentAcc.getSmtpport());
-        nameField.textProperty().bindBidirectional(currentAcc.getName());
-        System.out.println("INITIAL\n" + currentAcc);
+        System.out.println("INFO Current Account" + currentAcc);
         defaultBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
             @Override
@@ -83,7 +83,7 @@ public class AccountController implements Initializable {
                     imapServerField.setText("invalid email or password");
                     smtpServerField.setText("invalid email or password");
                 } else {
-                    currentAcc.setAccount(new Account(emailField.getText(), passwordField.getText()));
+                    currentAcc.setAccount(new Account(emailField.getText(), passwordField.getText(), nameField.getText()));
                 }
             }
         });
@@ -95,7 +95,7 @@ public class AccountController implements Initializable {
                         imapServerField.setText("invalid email or password");
                         smtpServerField.setText("invalid email or password");
                     } else {
-                        currentAcc.setAccount(new Account(emailField.getText(), passwordField.getText()));
+                        currentAcc.setAccount(new Account(emailField.getText(), passwordField.getText(), nameField.getText()));
                     }
                 } catch (Exception e) {
                 }

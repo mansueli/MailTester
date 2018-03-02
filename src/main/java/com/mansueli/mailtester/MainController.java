@@ -72,7 +72,6 @@ public class MainController implements Initializable {
                 if (smtpButton.isSelected()) {
                     loadFXML("smtp");
                 } else if (imapButton.isSelected()) {
-                    logger.info("INFO acc"+currentAccount.getAccount().getEmail());
                     loadFXML("imap");
                 } else if (msg2emlButton.isSelected()) {
                     loadFXML("msg2eml");
