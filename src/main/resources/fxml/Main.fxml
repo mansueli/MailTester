@@ -18,7 +18,7 @@
                                 <ToggleButton toggleGroup="$mainToggleGroup" fx:id="imapButton" layoutX="200.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="150.0" text="IMAP" />
                                 <ToggleButton toggleGroup="$mainToggleGroup" fx:id="smtpButton" layoutX="350.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="150.0" text="SMTP" />
                                 <ToggleButton toggleGroup="$mainToggleGroup" fx:id="msg2emlButton" layoutX="500.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="150.0" text="MSG -> EML" />
-                                <ToggleButton toggleGroup="$mainToggleGroup" fx:id="resultsButton" layoutX="650.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="150.0" text="Results" />
+                                <ToggleButton toggleGroup="$mainToggleGroup" fx:id="resultsButton" layoutX="650.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="150.0" text="Logs" />
                     </children>
                 </AnchorPane>
                 <AnchorPane fx:id="mainArea" maxHeight="500.0" maxWidth="800" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0">

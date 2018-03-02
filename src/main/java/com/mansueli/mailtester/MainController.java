@@ -7,31 +7,23 @@ package com.mansueli.mailtester;
 
 import com.mansueli.mailtester.email.CurrentAccount;
 import com.mansueli.mailtester.utils.SystemOutListener;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
-import org.controlsfx.control.SegmentedButton;
+import org.slf4j.LoggerFactory;
 
 /**
  * FXML Controller class
@@ -41,7 +33,7 @@ import org.controlsfx.control.SegmentedButton;
 public class MainController implements Initializable {
 
     public static CurrentAccount currentAccount = CurrentAccount.getInstance();
-
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(MainController.class);
     @FXML
     private AnchorPane tooglePanel;
     @FXML
@@ -80,6 +72,7 @@ public class MainController implements Initializable {
                 if (smtpButton.isSelected()) {
                     loadFXML("smtp");
                 } else if (imapButton.isSelected()) {
+                    logger.info("INFO acc"+currentAccount.getAccount().getEmail());
                     loadFXML("imap");
                 } else if (msg2emlButton.isSelected()) {
                     loadFXML("msg2eml");
@@ -112,8 +105,10 @@ public class MainController implements Initializable {
             case "imap":
                 if (isAccountDefined()) {
                     fxmlFile = "imap.fxml";
-                    break;
+                } else {
+                    fxmlFile = "account.fxml";
                 }
+                break;
             default:
                 fxmlFile = "account.fxml";
         }//FXMLLoader.load(getClass().getResource("/res/fxml/Main.fxml"));

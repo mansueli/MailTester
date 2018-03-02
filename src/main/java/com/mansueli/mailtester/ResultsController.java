@@ -5,12 +5,9 @@
  */
 package com.mansueli.mailtester;
 
-import com.mansueli.mailtester.utils.SystemOutListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
@@ -69,11 +66,13 @@ public class ResultsController implements Initializable {
         if (Character.isDigit(log.charAt(0))) {
             style += "font-family: 'Courier'; color: #0059B2;"; //"-fx-fill: #0059B2;";
         }
-        if (log.matches("(?i).*deb*")) {
-            style += "font-family: 'Courier'; color: #B28500;"; //"-fx-fill: #B28500;";
+        else if (log.toLowerCase().indexOf("deb") != -1||log.toLowerCase().indexOf("info") != -1){
+            style += "font-family: 'Courier'; color: #B28500;"; //"-fx-fill: #B28500;";        
         }
-        if (log.matches("(?i).*excep*")||log.matches("(?i).*err*")) {
+        else if ((log.toLowerCase().indexOf("excep") != -1)||(log.toLowerCase().indexOf("err") != -1)) {
             style += "font-family: 'Courier'; color: #DD5025;"; //"-fx-fill: #DD5025;";
+        }else{
+            style += "font-family: 'Courier';";
         }
         StringBuilder sb = new StringBuilder();
         String styled = sb.append("<p style=\"").append(style).append("\">").append(log).append("</p>").toString();

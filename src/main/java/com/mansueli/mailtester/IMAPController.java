@@ -11,7 +11,6 @@ import com.mansueli.mailtester.utils.EmailUtils;
 import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
@@ -28,7 +27,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javax.mail.MessagingException;
@@ -44,8 +42,8 @@ import org.slf4j.LoggerFactory;
  */
 public class IMAPController implements Initializable {
     
-    private IntegerProperty totalMsgs = new SimpleIntegerProperty(0);
-    private IntegerProperty totalFolders = new SimpleIntegerProperty(0);
+    private final IntegerProperty totalMsgs = new SimpleIntegerProperty(0);
+    private final IntegerProperty totalFolders = new SimpleIntegerProperty(0);
     private final Logger logger = LoggerFactory.getLogger(IMAPController.class);
     private Account currentAcc;
     @FXML
@@ -57,17 +55,21 @@ public class IMAPController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        CurrentAccount currentAcc = MainController.currentAccount;
-        if (EmailUtils.isInvalidEmailAddress(currentAcc.getEmail().getValue())) {
+        
+        CurrentAccount currentAccount = MainController.currentAccount;
+        currentAcc = currentAccount.getAccount();
+        listIMAP.setPrefSize(750.00,300.0);
+        listIMAP.setMinSize(600.0, 250);
+        if (EmailUtils.isInvalidEmailAddress(currentAcc.getEmail())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("No account was properly set.");
             alert.setContentText("Please define an account before using this.");
             alert.showAndWait();
-            logger.error("No account set error");
+            logger.error("No account set error | address ->" +currentAcc.getEmail());
         } else {
             Label label = new Label("Testing IMAP");
-            label.getStyleClass().add("h1");
+            label.setStyle("-fx-font: 16px Helvetica");
             imapPanel.setHeading(label);
             imapPanel.getStyleClass().add("panel-primary");
             TaskService service = new TaskService();
@@ -93,43 +95,33 @@ public class IMAPController implements Initializable {
                     listIMAP.setContent(ta);
                 }
             });
-            service.setOnFailed(new EventHandler<WorkerStateEvent>() {
-                @Override
-                public void handle(WorkerStateEvent event) {                        
-                        String message = service.getMessage();
-                        String[] errors = message.split("#");
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("ERROR");
-                        alert.setHeaderText(errors[0]);//+ e.getLocalizedMessage());
-                        alert.setContentText("Details: " + errors[1]);// + e.toString());
-                        alert.showAndWait();
-                        imapPanel.setHeading(new Label("\"Tested | Total Folders: " + totalFolders.getValue() + "| msgs: " + totalMsgs.getValue()));
-                        imapPanel.getStyleClass().add("panel-success");
-                        logger.error("No account set error");
-                }
+            service.setOnFailed((WorkerStateEvent event) -> {
+                String message = service.getMessage();
+                String[] errors = message.split("#");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("ERROR");
+                alert.setHeaderText(errors[0]);//+ e.getLocalizedMessage());
+                alert.setContentText("Details: " + errors[1]);// + e.toString());
+                alert.showAndWait();
+                imapPanel.setHeading(new Label("\"Tested | Total Folders: " + totalFolders.getValue() + "| msgs: " + totalMsgs.getValue()));
+                imapPanel.getStyleClass().add("panel-success");
+                logger.error("No account set error");
             });
-            service.setOnCancelled(new EventHandler<WorkerStateEvent>() {
-                @Override
-                public void handle(WorkerStateEvent event) {                        
-                        String message = service.getMessage();
-                        String[] errors = message.split("#");
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("ERROR");
-                        alert.setHeaderText(errors[0]);//+ e.getLocalizedMessage());
-                        alert.setContentText("Details: " + errors[1]);// + e.toString());
-                        alert.showAndWait();
-                        imapPanel.setHeading(new Label("ERROR while testing, check logs for details."));
-                        imapPanel.getStyleClass().add("panel-danger");
-                        logger.error("No account set error");
-                }
+            service.setOnCancelled((WorkerStateEvent event) -> {
+                String message = service.getMessage();
+                String[] errors = message.split("#");
+                imapPanel.setHeading(new Label("ERROR while testing, check logs for details."));
+                imapPanel.getStyleClass().add("panel-danger");
+                TextArea ta = new TextArea(errors[0]+"\n\n"+errors[1]);
+                listIMAP.setContent(ta);
+                logger.error("ERROR it wasn't possible to connect with IMAP properly\nERROR"+errors[1]+"\n"+errors[0]);
+                
             });
-            service.messageProperty().addListener(new ChangeListener<String>() {
-                @Override
-                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                    if (newValue.contains("#")){
-                        progressPanel.getScene().getWindow().hide();
-                        service.cancel();
-                    }
+            service.messageProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+                if (newValue.contains("#")){
+                    progressPanel.getScene().getWindow().hide();
+                    progressStage.hide();
+                    service.cancel();
                 }
             });
             service.restart();
