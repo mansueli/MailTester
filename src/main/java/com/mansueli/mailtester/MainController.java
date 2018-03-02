@@ -23,6 +23,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Toggle;
@@ -38,6 +39,7 @@ import org.controlsfx.control.SegmentedButton;
  * @author Mansueli
  */
 public class MainController implements Initializable {
+
     public static CurrentAccount currentAccount = CurrentAccount.getInstance();
 
     @FXML
@@ -56,12 +58,13 @@ public class MainController implements Initializable {
     private ToggleButton resultsButton;
     @FXML
     private ToggleGroup mainToggleGroup;
-    private static final List<String> log = new ArrayList<String>();
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
         SystemOutListener sout = SystemOutListener.GetSingleton();
         smtpButton.getStyleClass().add("too");
         imapButton.getStyleClass().add("too");
@@ -93,18 +96,24 @@ public class MainController implements Initializable {
     private void loadFXML(String name) {
         String fxmlFile;
         switch (name) {
-            case "smtp":
-                fxmlFile = "smtp.fxml";
-                break;
-            case "imap":
-                fxmlFile = "imap.fxml";
-                break;
             case "msg2eml":
                 fxmlFile = "msg2eml.fxml";
                 break;
             case "results":
                 fxmlFile = "results.fxml";
                 break;
+            case "smtp":
+                if (isAccountDefined()) {
+                    fxmlFile = "smtp.fxml";
+                } else {
+                    fxmlFile = "account.fxml";
+                }
+                break;
+            case "imap":
+                if (isAccountDefined()) {
+                    fxmlFile = "imap.fxml";
+                    break;
+                }
             default:
                 fxmlFile = "account.fxml";
         }//FXMLLoader.load(getClass().getResource("/res/fxml/Main.fxml"));
@@ -117,5 +126,31 @@ public class MainController implements Initializable {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
         // secPane.getChildren().add(newLoadedPane);
+    }
+
+    private boolean isAccountDefined() {
+        try {
+            String acc = currentAccount.getAccount().getEmail();
+            String pwd = currentAccount.getAccount().getPassword();
+            if (acc.isEmpty() || pwd.isEmpty()) {
+                throw new Exception("No email defined");
+            }
+            if (pwd.isEmpty()) {
+                throw new Exception("No password defined");
+            }
+            return true;
+        } catch (Exception e) {
+            showErrorDialog(e.getMessage(), e.toString());
+            accountButton.setSelected(true);
+            return false;
+        }
+    }
+
+    private void showErrorDialog(String s, String errorCode) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("NO Account ERROR");
+        alert.setHeaderText("You need to set an account before using this function.");
+        alert.setContentText(errorCode);
+        alert.showAndWait();
     }
 }

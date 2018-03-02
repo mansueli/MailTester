@@ -57,8 +57,8 @@ public class IMAPController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        currentAcc = MainController.currentAccount.getAccount();
-        if (EmailUtils.isInvalidEmailAddress(currentAcc.getEmail())) {
+        CurrentAccount currentAcc = MainController.currentAccount;
+        if (EmailUtils.isInvalidEmailAddress(currentAcc.getEmail().getValue())) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("ERROR");
             alert.setHeaderText("No account was properly set.");

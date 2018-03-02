@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MSG2EMLController implements Initializable {
 
-    private final Logger logger = LoggerFactory.getLogger(MSG2EMLController.class);
+    private final static Logger logger = LoggerFactory.getLogger(MSG2EML.class);
     private File sourceFile;
     private File destFile;
     @FXML
