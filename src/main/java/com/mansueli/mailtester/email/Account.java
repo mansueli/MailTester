@@ -10,7 +10,7 @@ package com.mansueli.mailtester.email;
  * @author Mansueli
  */
 public class Account {
-
+    private String name = "Doge Tester";
     private String password;
     private String email;
     private String smtp;
@@ -37,6 +37,15 @@ public class Account {
         this.smtpPort = smtpPort;
         this.imapPort = imapPort;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     /***
      * 
      * @param email email

@@ -40,6 +40,8 @@ public class AccountController implements Initializable {
     @FXML
     private TextField passwordField;
     @FXML
+    private TextField nameField;
+    @FXML
     private CheckBox defaultBox;
 
     @Override
@@ -52,6 +54,7 @@ public class AccountController implements Initializable {
         smtpServerField.textProperty().bindBidirectional(currentAcc.getSmtpserver());
         imapPortField.textProperty().bindBidirectional(currentAcc.getImapport());
         smtpPortField.textProperty().bindBidirectional(currentAcc.getSmtpport());
+        nameField.textProperty().bindBidirectional(currentAcc.getName());
         System.out.println("INITIAL\n" + currentAcc);
         defaultBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
@@ -87,14 +90,15 @@ public class AccountController implements Initializable {
         emailField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                try{
-                if (EmailUtils.isInvalidEmailAddress(emailField.getText()) || passwordField.getText().isEmpty()) {
-                    imapServerField.setText("invalid email or password");
-                    smtpServerField.setText("invalid email or password");
-                } else {
-                    currentAcc.setAccount(new Account(emailField.getText(), passwordField.getText()));
+                try {
+                    if (EmailUtils.isInvalidEmailAddress(emailField.getText()) || passwordField.getText().isEmpty()) {
+                        imapServerField.setText("invalid email or password");
+                        smtpServerField.setText("invalid email or password");
+                    } else {
+                        currentAcc.setAccount(new Account(emailField.getText(), passwordField.getText()));
+                    }
+                } catch (Exception e) {
                 }
-                }catch(Exception e){}
             }
         });
 

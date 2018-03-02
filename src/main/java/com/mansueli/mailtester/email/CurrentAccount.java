@@ -18,7 +18,10 @@ public class CurrentAccount {
     private Account account;
     private CurrentAccount(){}
     private final StringProperty email = new SimpleStringProperty();
-
+    private final StringProperty name = new SimpleStringProperty();
+    public StringProperty getName() {
+        return name;
+    }
     public StringProperty getEmail() {
         return email;
     }
@@ -61,6 +64,7 @@ public class CurrentAccount {
         smtpserver.setValue(account.getSmtp());
         imapport.setValue(String.valueOf(account.getImapPort()));
         smtpport.setValue(String.valueOf(account.getSmtpPort()));
+        name.setValue(account.getName());
     }
     
     public Account getAccount(){
@@ -75,6 +79,7 @@ public class CurrentAccount {
         sb.append(imapport.getValue()).append("; ");
         sb.append(smtpserver.getValue()).append("; ");
         sb.append(smtpport.getValue()).append("; ");
+        sb.append(name.getValue()).append(";");
         return sb.toString();
     }
 

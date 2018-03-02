@@ -191,7 +191,7 @@ public class SmtpController implements Initializable {
             body = body.append(lorem.getParagraphs(randomNum - 1, ThreadLocalRandom.current().nextInt(1, 4)));
             body = body.append("\n\n").append(lorem.getName()).append("\n").append(lorem.getEmail()).append("\n").append(lorem.getPhone());
             Email email = EmailBuilder.startingBlank()
-                    .from("Happy Tester", fromAcc.getEmail())
+                    .from(fromAcc.getName(), fromAcc.getEmail())
                     .to(toBox.getText())
                     .withSubject(lorem.getWords(randomNum))
                     .withPlainText(body.toString())
@@ -216,7 +216,7 @@ public class SmtpController implements Initializable {
             logger.info("making email with attachment");
             System.out.println("error vaca");
             Email email = EmailBuilder.startingBlank()
-                    .from("Happy Tester", fromAcc.getEmail())
+                    .from(fromAcc.getName(), fromAcc.getEmail())
                     .to(toBox.getText())
                     .withSubject(lorem.getWords(randomNum))
                     .withAttachment(attachment.getName(), new FileDataSource(attachment.getAbsolutePath()))
@@ -240,7 +240,7 @@ public class SmtpController implements Initializable {
             body = body.append(lorem.getHtmlParagraphs(randomNum - 1, ThreadLocalRandom.current().nextInt(1, 4)));
             body = body.append("\n\n").append(lorem.getName()).append("\n").append(lorem.getEmail()).append("\n").append(lorem.getPhone());
             Email email = EmailBuilder.startingBlank()
-                    .from("Happy Tester", fromAcc.getEmail())
+                    .from(fromAcc.getName(), fromAcc.getEmail())
                     .to(toBox.getText())
                     .withSubject(lorem.getWords(randomNum))
                     .withHTMLText(body.toString())
