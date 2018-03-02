@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.TextField?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="410.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mansueli.mailtester.SmtpController">
+    <children>
+        <AnchorPane fx:id="SMTPpane" prefHeight="118.0" prefWidth="800.0">
+            <children>
+                <Label  layoutX="40.0" layoutY="22.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="114.0" text="from:" />
+                <Line endX="650.0" layoutX="100.0" layoutY="100.0" startX="-50.0" />
+                <TextField fx:id="accountBox" disable="true" layoutX="169.0" layoutY="22.0" prefHeight="34.0" prefWidth="482.0" />
+            </children>
+        </AnchorPane>
+        <AnchorPane prefHeight="244.0" prefWidth="800.0">
+            <fx:define>
+                <ToggleGroup fx:id="smtpToggleGroup"/>
+            </fx:define>
+            <children>
+                <ToggleButton toggleGroup="$smtpToggleGroup" fx:id="emlButton" layoutX="60.0" layoutY="60.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" maxWidth="128.0" maxHeight="128.0" prefHeight="128.0" prefWidth="108.0" text="" />
+                <ToggleButton toggleGroup="$smtpToggleGroup" fx:id="attachButton" layoutX="248.0" layoutY="60.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" maxWidth="128.0" maxHeight="128.0" prefHeight="128.0" prefWidth="108.0" text="" />
+                <ToggleButton toggleGroup="$smtpToggleGroup" fx:id="htmlButton" layoutX="428.0" layoutY="60.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" maxWidth="128.0" maxHeight="128.0" prefHeight="128.0" prefWidth="108.0" text="" />
+                <ToggleButton toggleGroup="$smtpToggleGroup" fx:id="plainButton" layoutX="616.0" layoutY="60.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" maxWidth="128.0" maxHeight="128.0" prefHeight="128.0" prefWidth="108.0" text="" />
+            </children>
+        </AnchorPane>
+        <AnchorPane prefHeight="58.0" prefWidth="800.0">
+            <children>
+                <Button fx:id="sendButton" onAction="#handleSendAction" defaultButton="true" disable="true" layoutX="665.0" layoutY="36.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="114.0" text="Send Email" />
+                <TextField fx:id="toBox" disable="true" layoutX="172.0" layoutY="35.0" prefHeight="34.0" prefWidth="482.0" />
+                <Label layoutX="130.0" layoutY="46.0" text="TO">
+                    <font>
+                        <Font size="14.0" />
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+    </children>
+</VBox>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="500.0" maxWidth="800" minHeight="500.0" minWidth="750.0" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mansueli.mailtester.MainController">
+    <children>
+        <VBox prefHeight="51.0" prefWidth="800.0" style="-fx-background-color: #FFFFFF;">
+            <children>
+                <AnchorPane fx:id="tooglePanel" maxHeight="51" maxWidth="800" minHeight="51" minWidth="-Infinity" prefHeight="51.0" prefWidth="800.0">
+                    <fx:define>
+                        <ToggleGroup fx:id="mainToggleGroup"/>
+                    </fx:define>
+                    <children>
+                                <ToggleButton toggleGroup="$mainToggleGroup" fx:id="accountButton" layoutY="-1.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="200.0" text="SET ACCOUNT" />
+                                <ToggleButton toggleGroup="$mainToggleGroup" fx:id="imapButton" layoutX="200.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="150.0" text="IMAP" />
+                                <ToggleButton toggleGroup="$mainToggleGroup" fx:id="smtpButton" layoutX="350.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="150.0" text="SMTP" />
+                                <ToggleButton toggleGroup="$mainToggleGroup" fx:id="msg2emlButton" layoutX="500.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="150.0" text="MSG -> EML" />
+                                <ToggleButton toggleGroup="$mainToggleGroup" fx:id="resultsButton" layoutX="650.0" layoutY="-1.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="150.0" text="Results" />
+                    </children>
+                </AnchorPane>
+                <AnchorPane fx:id="mainArea" maxHeight="500.0" maxWidth="800" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0">
+                </AnchorPane>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

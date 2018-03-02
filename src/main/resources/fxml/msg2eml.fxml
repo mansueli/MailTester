@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<VBox fx:id="msg2emlPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mansueli.mailtester.MSG2EMLController">
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="sourceButton" layoutX="172.0" layoutY="54.0" mnemonicParsing="false" onAction="#sourcePick" prefHeight="38.0" prefWidth="230.0" text="source file" />
+            <Label layoutX="93.0" layoutY="65.0" text="Source" />
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="destButton" layoutX="175.0" layoutY="41.0" mnemonicParsing="false" onAction="#destPick" prefHeight="38.0" prefWidth="230.0" text="destination file" />
+            <Label layoutX="77.0" layoutY="52.0" text="Destination" />
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Button defaultButton="true" layoutX="207.0" layoutY="34.0" mnemonicParsing="false" onAction="#convertMail" prefHeight="66.0" prefWidth="168.0" text="Convert">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>

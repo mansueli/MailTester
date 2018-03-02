@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
+<VBox fx:id="imapPane" prefHeight="500.0" prefWidth="793.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.mansueli.mailtester.IMAPController">
+   <children>
+      <Panel fx:id="imapPanel" prefHeight="400.0" prefWidth="600.0">  
+        <ScrollPane fx:id="listIMAP" prefHeight="500.0" prefWidth="641.0">
+            <content>
+            </content>
+        </ScrollPane>
+      </Panel>
+   </children>
+</VBox>

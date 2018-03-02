@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="329.0" prefWidth="411.0" xmlns="http://javafx.com/javafx/8.0.131" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="com.mansueli.mailtester.AccountController">
+  <children>
+<AnchorPane layoutX="72.0">
+  <children>
+      <Label layoutX="72.0" layoutY="16.0" text="Email">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="47.0" layoutY="47.0" text="Password">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="emailField" layoutX="120.0" layoutY="14.0" prefHeight="25.0" prefWidth="234.0" />
+      <TextField fx:id="passwordField" layoutX="120.0" layoutY="45.0" prefHeight="25.0" prefWidth="234.0" />
+      <Line endX="250.0" layoutX="125.0" layoutY="110.0" startX="-100.0" />
+      <Label layoutX="25.0" layoutY="143.0" text="IMAP">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="27.0" layoutY="190.0" text="SMTP" />
+      <TextField fx:id="imapServerField" disable="true" layoutX="78.0" layoutY="141.0" prefHeight="25.0" prefWidth="256.0" />
+      <TextField fx:id="smtpServerField" disable="true" layoutX="77.0" layoutY="184.0" prefHeight="25.0" prefWidth="256.0" />
+      <Text layoutX="354.0" layoutY="126.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PORT" />
+      <TextField fx:id="imapPortField" disable="true" layoutX="343.0" layoutY="141.0" prefHeight="25.0" prefWidth="59.0" />
+      <TextField fx:id="smtpPortField" disable="true" layoutX="343.0" layoutY="184.0" prefHeight="25.0" prefWidth="59.0" />
+      <CheckBox fx:id="defaultBox" layoutX="106.0" layoutY="84.0" mnemonicParsing="false" selected="true" text="Default Servers" />
+   </children>
+</AnchorPane>
+</children>
+</VBox>
