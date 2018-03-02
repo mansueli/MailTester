@@ -11,7 +11,13 @@ import com.mansueli.mailtester.utils.EmailUtils;
 import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.URL;
+import java.util.Date;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 import javafx.beans.binding.Bindings;
@@ -32,6 +38,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javax.activation.FileDataSource;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import org.apache.poi.util.TempFile;
+import org.simplejavamail.converter.EmailConverter;
 import org.simplejavamail.email.Email;
 import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.Mailer;
@@ -68,6 +81,7 @@ public class SmtpController implements Initializable {
     private Button sendButton;
     private final Logger logger = LoggerFactory.getLogger(SmtpController.class);
     private File attachment;
+    private File emailFile;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -131,6 +145,9 @@ public class SmtpController implements Initializable {
                     if (attachButton.isSelected()) {
                         attachment = selectFile("Select File to attach");
                     }
+                    else if(emlButton.isSelected()){
+                        emailFile = selectEmailFile();
+                    }
                 }
             });
         }
@@ -156,7 +173,7 @@ public class SmtpController implements Initializable {
         if (plainButton.isSelected()) {
             sendPlainMail();
         } else if (emlButton.isSelected()) {
-            sendEMLMail();
+            sendFromEmailFile();
         } else if (attachButton.isSelected()) {
             sendMailWithAttachment();
         } else if (htmlButton.isSelected()) {
@@ -182,19 +199,15 @@ public class SmtpController implements Initializable {
             mailer.sendMail(email);
             showOKDialog();
         } catch (Exception e) {
-            logger.error("not sent "+ e.toString());
+            logger.error("not sent " + e.toString());
             showErrorDialog(e.getLocalizedMessage(), e.toString());
         }
-    }
-
-    private void sendEMLMail() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void sendMailWithAttachment() {
         try {
             Account fromAcc = MainController.currentAccount.getAccount();
-            Mailer mailer = defineMailer(fromAcc,30);
+            Mailer mailer = defineMailer(fromAcc, 30);
             Lorem lorem = LoremIpsum.getInstance();
             int randomNum = ThreadLocalRandom.current().nextInt(3, 10);
             StringBuilder body = new StringBuilder();
@@ -209,7 +222,7 @@ public class SmtpController implements Initializable {
                     .withAttachment(attachment.getName(), new FileDataSource(attachment.getAbsolutePath()))
                     .withHTMLText(body.toString())
                     .buildEmail();
-            
+
             mailer.sendMail(email);
         } catch (Exception e) {
             logger.error("Couldn't send message " + e.toString());
@@ -249,6 +262,7 @@ public class SmtpController implements Initializable {
         //15 secounds as standard timeout
         return defineMailer(acc, 15);
     }
+
     private Mailer defineMailer(Account acc, int timeout) {
         Mailer mailer = MailerBuilder
                 .withSMTPServer(acc.getSmtp(), acc.getSmtpPort(), acc.getEmail(), acc.getPassword())
@@ -259,6 +273,7 @@ public class SmtpController implements Initializable {
                 .buildMailer();
         return mailer;
     }
+
     private TransportStrategy getTransportStrategy(Account acc) {
         TransportStrategy ts;
         switch (acc.getSmtpPort()) {
@@ -285,8 +300,72 @@ public class SmtpController implements Initializable {
     private void showErrorDialog(String s, String errorCode) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("SEND ERROR");
-        alert.setHeaderText("We couldn't send the message because of "+s.toLowerCase());
+        alert.setHeaderText("We couldn't send the message because of " + s.toLowerCase());
         alert.setContentText(errorCode);
         alert.showAndWait();
+    }
+
+    private void sendEMLmessage(File mail) {
+        try {
+            Account acc = MainController.currentAccount.getAccount();
+            InputStream is = new FileInputStream(mail.getAbsoluteFile());
+            MimeMessage msg = new MimeMessage(createDummySession(), is);
+            msg.setFrom(acc.getEmail());
+            msg.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(toBox.getText(), false));
+            msg.setSubject("MailTester -> " + msg.getSubject());
+            msg.setHeader("X-Mailer", "Email program");
+            msg.setSentDate(new Date());
+            Email email = EmailConverter.mimeMessageToEmail(msg);
+            try {
+                Account fromAcc = MainController.currentAccount.getAccount();
+                Mailer mailer = defineMailer(fromAcc);
+                mailer.sendMail(email);
+                showOKDialog();
+            } catch (Exception e) {
+                logger.error("not sent " + e.toString());
+                showErrorDialog(e.getMessage(), e.toString());
+            }
+        } catch (Exception e) {
+            logger.error("Couldn't send message");
+            showErrorDialog(e.getMessage(), e.toString());
+        }
+    }
+
+    private void sendMSGmessage(File mail) {
+        String email = EmailConverter.outlookMsgToEML(mail);
+        File tempFile = TempFile.createTempFile("mail", "eml");
+        try (PrintStream out = new PrintStream(new FileOutputStream(tempFile))) {
+            out.print(email);
+            sendEMLmessage(tempFile);
+        } catch (Exception e) {
+            logger.error("Couldn't send the MSG file");
+        }
+
+    }
+
+    private void sendFromEmailFile(){
+         File email = emailFile;
+         if(email.getName().toLowerCase().endsWith("msg")){
+            sendMSGmessage(email);
+         }else{
+            sendEMLmessage(email);
+         }
+    }
+
+    private static Session createDummySession() {
+        return Session.getDefaultInstance(new Properties());
+    }
+    
+    private File selectEmailFile(){
+        File sourceFile;
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Select an email Message to send");
+        FileChooser.ExtensionFilter fileExtensions
+                = new FileChooser.ExtensionFilter("Email messages", "*.msg", "*.eml", "*.txt");
+        fc.getExtensionFilters().add(fileExtensions);
+        sourceFile = fc.showOpenDialog(new Stage());
+        logger.debug("selected as email file " + sourceFile.getAbsolutePath());
+        return sourceFile;
     }
 }

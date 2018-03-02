@@ -7,8 +7,8 @@ package com.mansueli.mailtester;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.PrintStream;
 import javafx.scene.control.Alert;
-import javax.mail.internet.MimeMessage;
 import org.simplejavamail.converter.EmailConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +24,17 @@ import org.slf4j.LoggerFactory;
  */
 public class MSG2EML {
 
-    private static final Logger logger = LoggerFactory.getLogger(SmtpController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MSG2EML.class);
 
     public static boolean convert(String msgPath, String emlPath) {
         try {
-            MimeMessage message = EmailConverter.outlookMsgToMimeMessage(new File(msgPath));
-            message.writeTo(new FileOutputStream(new File(emlPath)));
+            logger.debug("MSG2EML - start");
+            String message = EmailConverter.outlookMsgToEML(new File(msgPath));
+            try (PrintStream out = new PrintStream(new FileOutputStream(emlPath))) {
+                out.print(message);
+            }catch(Exception e){
+                logger.error("Couldn't save " +e.getMessage());
+            }
             return true;
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -40,10 +45,17 @@ public class MSG2EML {
             return false;
         }
     }
-
-    public static void main(String[] args) {
-        String msg = "C:\\Users\\Mansueli\\Desktop\\CA LG.LogEntry Greške - DM okruženje.msg";
-        String eml = "C:\\Users\\Mansueli\\Desktop\\CA LG.LogEntry Greške - DM okruženje.eml";
-        System.out.println("result" + convert(msg, eml));
+    public static String convertToEMLString(String msgPath, String emlPath) {
+        try {
+            logger.debug("MSG2EML - start");
+            return EmailConverter.outlookMsgToEML(new File(msgPath));
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Convertion ERROR");
+            alert.setHeaderText("There was an error while performing the conversion.");
+            alert.setContentText(e.getLocalizedMessage());
+            logger.error("Error on convertion " + e.getLocalizedMessage());
+            return "";
+        }
     }
 }
