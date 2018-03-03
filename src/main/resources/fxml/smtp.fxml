@@ -48,7 +48,7 @@
         </AnchorPane>   
 		<AnchorPane>
 			<children>
-			<Label layoutX="440.0" layoutY="0.0" text="Wait a few seconds after clicking to send" />
+			<Label layoutX="440.0" layoutY="10.0" text="Wait a few seconds after clicking to send" />
 			</children>
 		</AnchorPane>
     </children>
