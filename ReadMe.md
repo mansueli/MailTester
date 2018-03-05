@@ -18,10 +18,11 @@ The app will use IMAPS on port 993 and STARTTLS on any other port provided by th
 ### MSG2EML
  Select an MSG file, select the output folder and convert.  *Yes, that simple!* 
 
-### Logs, the app collect logs from other tests and tasks and will show them to you here. 
+### Logs 
+The app collect logs from other tests and tasks and will show them to you here. 
 
-##Bug
-*Found a bug, has a suggestion?* 
+## Bug
+*Found a bug, do you have a suggestion?* 
 Please report it [here](https://github.com/mansueli/MailTester/issues)
 
 ## License
