@@ -4,7 +4,7 @@
 
     <groupId>com.mansueli</groupId>
     <artifactId>MailTester</artifactId>
-    <version>0.18-RC</version>
+    <version>0.36-RC</version>
     <packaging>jar</packaging>
     <name>MailTester</name>
 
