@@ -12,6 +12,7 @@ import com.sun.mail.imap.IMAPFolder;
 import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
@@ -44,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * @author Mansueli
  */
 public class IMAPController implements Initializable {
-    
+
     private final IntegerProperty totalMsgs = new SimpleIntegerProperty(0);
     private final IntegerProperty totalFolders = new SimpleIntegerProperty(0);
     private final Logger logger = LoggerFactory.getLogger(IMAPController.class);
@@ -55,10 +56,10 @@ public class IMAPController implements Initializable {
     private ScrollPane listIMAP;
     private Stage progressStage;
     private String imapText;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         CurrentAccount currentAccount = MainController.currentAccount;
         currentAcc = currentAccount.getAccount();
         listIMAP.setPrefSize(750.00, 300.0);
@@ -71,7 +72,7 @@ public class IMAPController implements Initializable {
             alert.showAndWait();
             logger.error("No account set error | address ->" + currentAcc.getEmail());
         } else {
-            
+
             imapPanel.setHeading(new Label("running"));
             imapPanel.getStyleClass().add("panel-primary");
             TaskService service = new TaskService();
@@ -150,7 +151,7 @@ public class IMAPController implements Initializable {
                 ta.setMinSize(600.0, 250);
                 listIMAP.setContent(ta);
                 logger.error("ERROR it wasn't possible to connect with IMAP properly\nERROR" + errors[1] + "\n" + errors[0]);
-                
+
             });
             service.messageProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
                 if (newValue.contains("#")) {
@@ -167,11 +168,11 @@ public class IMAPController implements Initializable {
 //    System.out.println("");
 //    }
     private class TaskService extends Service<Void> {
-        
+
         @Override
         protected Task<Void> createTask() {
             Task<Void> task = new Task<Void>() {
-                
+
                 @Override
                 protected Void call() throws Exception {
                     try {
@@ -180,7 +181,7 @@ public class IMAPController implements Initializable {
                         props.setProperty("mail.store.protocol", "imaps");
                         props.setProperty("mail.imap.auth.login.disable", "false");
                         props.setProperty("mail.imap.sasl.enable", "true");
-                        props.setProperty("mail.imap.sasl.mechanisms", "LOGIN");                        
+                        props.setProperty("mail.imap.sasl.mechanisms", "LOGIN");
                         props.setProperty("mail.imap.auth.mechanisms", "LOGIN PLAIN");
                         props.setProperty("mail.imap.starttls.enable", "true");
                         String required = (currentAcc.getImapPort() == 143 ? "true" : "false");
@@ -192,14 +193,14 @@ public class IMAPController implements Initializable {
                         //reseting count, in case the user runs again :) 
                         int tMsgs = 0;
                         int tFolders = 0;
-                        
+
                         Session session = Session.getDefaultInstance(props, null);
                         session.setDebug(true);
                         String imapstore = (currentAcc.getImapPort() == 143 ? "imap" : "imaps");
                         logger.debug("IMAP start");
                         Store store = session.getStore(imapstore);
                         logger.debug("attempting to login on " + currentAcc.getImap() + ":" + currentAcc.getImapPort() + "\n with account: " + currentAcc.getEmail() + " pwd: " + currentAcc.getPassword());
-                        
+
                         store.connect(currentAcc.getImap(), currentAcc.getImapPort(), currentAcc.getEmail(), currentAcc.getPassword());
                         logger.debug("DEBUG Connection successful");
                         javax.mail.Folder[] folders = store.getDefaultFolder().list("*");
@@ -216,20 +217,28 @@ public class IMAPController implements Initializable {
                             totalMsgs.set(tMsgs);
                             totalFolders.setValue(tFolders);
                         }
-                        IMAPFolder ff = (IMAPFolder) folders[0];                     
+                        IMAPFolder ff = (IMAPFolder) folders[0];
                         ff.open(Folder.READ_ONLY);
                         try {
-                            ff.idle(true);
-                            logger.info("INFO IDLE command was successful");
+                            Platform.runLater(() -> {
+                                try {
+                                    Thread.sleep(1000);
+                                    ff.idle(true);
+                                } catch (Exception e) {
+                                    logger.error(e.getMessage());
+                                }
+                            });
+                            ff.close();
+                            System.out.println("INFO IDLE command was successful");
                         } catch (MessagingException mse) {
-                            logger.error("ERROR server doesn't support IDLE" +mse.getMessage());
+                            logger.error("ERROR server doesn't support IDLE" + mse.getMessage());
                         }
                     } catch (Exception e) {
                         logger.error("ERROR" + e.toString());
                         updateMessage(e.getMessage() + "#" + e.toString());
                         super.failed();
                         boolean a = super.cancel();
-                        
+
                     }
                     return null;
                 }
@@ -237,7 +246,7 @@ public class IMAPController implements Initializable {
             return task;
         }
     }
-    
+
     private void showErrorDialog(String s, String errorCode) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("SEND ERROR");
@@ -261,7 +270,7 @@ public class IMAPController implements Initializable {
                 + "    -fx-font-size: 18px;\n"
                 + "    -fx-font-weight: bold;\n"
                 + "    -fx-text-fill: white;\n"
-                + "    -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);";        
+                + "    -fx-effect: dropshadow( three-pass-box , rgba(255,255,255,0.2) , 1, 0.0 , 0 , 1);";
         btn.setStyle(css);
     }
 }
