@@ -2,6 +2,8 @@
 MailTester is an app meant for quick tests on email servers and email clients that people working on email support have perform several times. 
 It also includes a handy a Outlook Email format (MSG) to standar email format converter to help people to investigate issues on sample emails sent by clients.
 
+*We discourage and strongly advise against using this on a real user's account. This should be only used with test accounts.*
+
 ## Usage
 Download the app, setup an account then test it for IMAP, SMTP through SSL. 
 
