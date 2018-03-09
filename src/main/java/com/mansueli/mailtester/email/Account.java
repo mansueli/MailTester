@@ -29,13 +29,14 @@ public class Account {
      * @param smtpPort SMTP port number
      * @param imapPort IMAP port number
      */
-    public Account(String email, String pass, String smtp, String imap, int smtpPort, int imapPort) {
+    public Account(String email, String pass, String smtp, String imap, int smtpPort, int imapPort, String name) {
         this.password = pass;
         this.email = email;
         this.smtp = smtp;
         this.imap = imap;
         this.smtpPort = smtpPort;
         this.imapPort = imapPort;
+        this.name = name;
     }
 
     public String getName() {
@@ -51,43 +52,7 @@ public class Account {
         this.name = name;
     }
 
-    /**
-     * *
-     *
-     * @param email email
-     * @param pass password
-     * @param smtp smtp server
-     * @param imap imap server
-     * @param smtpPort SMTP port number
-     */
-    public Account(String email, String pass, String smtp, String imap, int smtpPort) {
-        this(email, pass, smtp, imap, smtpPort, 993);
-    }
 
-    /**
-     * *
-     *
-     * @param email email
-     * @param pass password
-     * @param smtp smtp server
-     * @param imap imap server
-     */
-    public Account(String email, String pass, String smtp, String imap) {
-        this(email, pass, smtp, imap, 587, 993);
-    }
-
-    /**
-     * *
-     *
-     * @param email email
-     * @param pass password
-     * @param smtpPort smtp port number
-     * @param imapPort imap port number
-     */
-    public Account(String email, String pass, int smtpPort, int imapPort) {
-        this(email, pass, "smtp." + email.split("@")[1], "imap." + email.split("@")[1], smtpPort, imapPort);
-        
-    }
   
      /**
      * @param email email
@@ -95,29 +60,10 @@ public class Account {
      * @param name name
      */
     public Account(String email, String pass, String name) {
-        this(email, pass, 587, 993);
-        this.name=name;
-    }
-    /**
-     * *
-     *
-     * @param email email
-     * @param pass password
-     */
-    public Account(String email, String pass) {
-        this(email, pass, 587, 993);
+        this(email, pass, "smtp." + email.split("@")[1], "imap." + email.split("@")[1], 587, 993 , name);
     }
 
-    /**
-     * *
-     *
-     * @param email email
-     * @param pass password
-     * @param port Smtp port number
-     */
-    public Account(String email, String pass, int port) {
-        this(email, pass, port, 993);
-    }
+ 
 
     public String getPassword() {
         return password;

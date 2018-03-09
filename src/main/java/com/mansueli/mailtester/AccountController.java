@@ -12,13 +12,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 
 /**
  *
@@ -48,14 +45,16 @@ public class AccountController implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
         currentAcc = MainController.currentAccount;
+        if (isAccountValid()) {
+            setAccountonFields();
+        }
         nameField.textProperty().bindBidirectional(currentAcc.getName());
         emailField.textProperty().bindBidirectional(currentAcc.getEmail());
         passwordField.textProperty().bindBidirectional(currentAcc.getPassword());
-        imapServerField.textProperty().bindBidirectional(currentAcc.getImapserver());
+        currentAcc.getImapserver().bindBidirectional(imapServerField.textProperty());
         smtpServerField.textProperty().bindBidirectional(currentAcc.getSmtpserver());
-        imapPortField.textProperty().bindBidirectional(currentAcc.getImapport());
+        currentAcc.getImapport().bindBidirectional(imapPortField.textProperty());
         smtpPortField.textProperty().bindBidirectional(currentAcc.getSmtpport());
-        System.out.println("INFO Current Account" + currentAcc);
         defaultBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
 
             @Override
@@ -71,11 +70,37 @@ public class AccountController implements Initializable {
                     smtpServerField.setDisable(false);
                     imapPortField.setDisable(false);
                     smtpPortField.setDisable(false);
-                    System.out.println("OFF\n" + currentAcc);
+//                    System.out.println("OFF\n" + currentAcc);
                 }
 
             }
         });
+        ChangeListener<String> advanced = new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                try {
+                    if (imapPortField.getText().isEmpty() || smtpPortField.getText().isEmpty()) {
+                        imapServerField.setText("invalid PORT");
+                        smtpServerField.setText("invalid PORT");
+                    } else {
+                        if (imapServerField.getText().isEmpty() || smtpServerField.getText().isEmpty()) {
+                            imapServerField.setText("no server defined");
+                            smtpServerField.setText("no server defined");
+                        } else {
+                            //Account(String email, String pass, String smtp, String imap, int smtpPort, int imapPort, String name)
+                            currentAcc.setAccount(new Account(emailField.getText(), passwordField.getText(), smtpServerField.getText(), imapServerField.getText(),
+                                    Integer.parseInt(smtpPortField.getText()), Integer.parseInt(imapPortField.getText()), nameField.getText()));
+                        }
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        };
+        smtpServerField.textProperty().addListener(advanced);
+        imapServerField.textProperty().addListener(advanced);
+        smtpPortField.textProperty().addListener(advanced);
+        imapPortField.textProperty().addListener(advanced);
         passwordField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -98,10 +123,46 @@ public class AccountController implements Initializable {
                         currentAcc.setAccount(new Account(emailField.getText(), passwordField.getText(), nameField.getText()));
                     }
                 } catch (Exception e) {
+                   // System.out.println("Null pointer somewhere : " + e.getMessage());
                 }
             }
         });
 
     }
 
+    private boolean isAccountValid() {
+        try {
+            if (currentAcc.getEmail().get().isEmpty()
+                    || currentAcc.getPassword().get().isEmpty()
+                    || currentAcc.getImapserver().get().isEmpty()
+                    || currentAcc.getSmtpserver().get().isEmpty()) {
+                return false;
+            } else {
+                try {
+                    int i = Integer.parseInt(currentAcc.getSmtpport().get());
+                    i = Integer.parseInt(currentAcc.getImapport().get());
+                    return true;
+                } catch (NumberFormatException e) {
+                    //reset defaults if something went wrong.
+                    smtpPortField.setText("587");
+                    imapPortField.setText("993");
+                    return false;
+                }
+
+            }
+
+        } catch (Exception e) {
+            //System.out.println("INFO account wasn't valid/defined when this view started.");
+            return false;
+        }
+    }
+
+    private void setAccountonFields() {
+        nameField.setText(currentAcc.getName().get());
+        emailField.setText(currentAcc.getEmail().get());
+        imapServerField.setText(currentAcc.getImapserver().get());
+        smtpServerField.setText(currentAcc.getSmtpserver().get());
+        smtpPortField.setText(currentAcc.getSmtpport().get());
+        imapPortField.setText(currentAcc.getImapport().get());
+    }
 }
